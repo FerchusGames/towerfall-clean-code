@@ -620,6 +620,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1976224039065479580, guid: e8fde86a435cb4e439bb225e10522fbe, type: 3}
+      propertyPath: _rigidbody2D
+      value: 
+      objectReference: {fileID: 1038252055932220057}
+    - target: {fileID: 1976224039065479580, guid: e8fde86a435cb4e439bb225e10522fbe, type: 3}
+      propertyPath: _playerProperties
+      value: 
+      objectReference: {fileID: 11400000, guid: 20232b82856fd5641b959150f6840a72, type: 2}
     - target: {fileID: 2846138476073471522, guid: e8fde86a435cb4e439bb225e10522fbe, type: 3}
       propertyPath: m_Name
       value: Player
@@ -629,6 +637,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e8fde86a435cb4e439bb225e10522fbe, type: 3}
+--- !u!50 &1038252055932220057 stripped
+Rigidbody2D:
+  m_CorrespondingSourceObject: {fileID: 811675679908487760, guid: e8fde86a435cb4e439bb225e10522fbe, type: 3}
+  m_PrefabInstance: {fileID: 1038252055932220056}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8973672453146644158
 PrefabInstance:
   m_ObjectHideFlags: 0
