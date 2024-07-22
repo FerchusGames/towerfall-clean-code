@@ -21,7 +21,7 @@ namespace Towerfall.Managers
     public partial class InputManager : IPlayerInput
     {
         private readonly Subject<Unit> _jumpSubject = new Subject<Unit>();
-        private readonly Subject<Vector2> _moveSubject = new Subject<Vector2>();
+        private readonly Subject<Vector2> _moveSubject = new Subject<Vector2>(); // TODO: Change to float 
 
         public IObservable<Unit> Jump => _jumpSubject.AsObservable();
         public IObservable<Vector2> Move => _moveSubject.AsObservable();

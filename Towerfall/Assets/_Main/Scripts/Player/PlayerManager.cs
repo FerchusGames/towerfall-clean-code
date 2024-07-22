@@ -1,7 +1,6 @@
 using System;
-using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
 using Towerfall.Controllers;
+using Towerfall.Managers.Properties;
 using UniRx;
 using UnityEngine;
 using Zenject;
@@ -11,46 +10,32 @@ namespace Towerfall.Managers
     public partial class PlayerManager : IPlayerControllerInput
     {
         [Inject] private IPlayerInput _playerInput;
-        
-        public IObservable<Unit> Jump => PassJumpEvent();
-        public IObservable<Vector2> Move => PassMoveEvent();
+        [Inject] private IPlayerProperties _playerProperties;
 
-        private IObservable<Unit> PassJumpEvent()
+        private Subject<float> _jumpSubject = new Subject<float>();
+        private Subject<Vector2> _moveSubject = new Subject<Vector2>();
+        
+        public IObservable<float> Jump => _jumpSubject.AsObservable();
+        public IObservable<Vector2> Move => _moveSubject.AsObservable();
+        
+        private void PassJumpEvent()
         {
-            // Confused on how to pass a different value
-            return _playerInput.Jump;
+            _jumpSubject.OnNext(_playerProperties.JumpForceMagnitude);
         }
 
-        private IObservable<Vector2> PassMoveEvent()
+        private void PassMoveEvent(Vector2 moveDirection)
         {
-            // Confused on how to pass a different value
-            return _playerInput.Move;
+            moveDirection.x *= _playerProperties.MoveAccelerationRate;
+            _moveSubject.OnNext(moveDirection);
         }
     }
 
-    public partial class PlayerManager
+    public partial class PlayerManager : IInitializable
     {
-        private readonly float _jumpForceMagnitude;
-        private readonly float _moveAccelerationRate;
-
-        private Vector2 _currentMoveAccelerationRate;
-        
-        public PlayerManager(float jumpForceMagnitude, float moveAccelerationRate)
+        public void Initialize() 
         {
-            _jumpForceMagnitude = jumpForceMagnitude;
-            _moveAccelerationRate = moveAccelerationRate;
-            
-            _playerInput.Move.Subscribe(move => _currentMoveAccelerationRate = move);
-        }
-
-        public Vector2 GetJumpForce()
-        {
-            return Vector2.up * _jumpForceMagnitude;
-        }
-
-        public Vector2 GetMoveAcceleration()
-        {
-            return Vector2.right * _currentMoveAccelerationRate; 
+            _playerInput.Jump.Subscribe(PassJumpEvent);
+            _playerInput.Move.Subscribe(PassMoveEvent);
         }
     }
 }

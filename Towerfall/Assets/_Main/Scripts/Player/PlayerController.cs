@@ -7,7 +7,7 @@ namespace Towerfall.Controllers
 {
     public interface IPlayerControllerInput
     {
-        IObservable<Unit> Jump { get; }
+        IObservable<float> Jump { get; }
         IObservable<Vector2> Move { get; }
     }
     
@@ -23,16 +23,14 @@ namespace Towerfall.Controllers
             _playerControllerInput.Move.Subscribe(Move).AddTo(this);
         }
 
-        private void Jump()
+        private void Jump(float jumpForce)
         {
-            // TODO: Get force directly from PlayerManager
-            //_rigidbody2D.AddForce({Force}, ForceMode2D.Impulse);
+            _rigidbody2D.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
 
         private void Move(Vector2 value)
         {
-            // TODO: Get acceleration directly from PlayerManager
-            //_rigidbody2D.AddForce({Acceleration}, ForceMode2D.Force);
+            _rigidbody2D.AddForce(value, ForceMode2D.Force);
         }
     }
 }
