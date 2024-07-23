@@ -8,7 +8,7 @@ namespace Towerfall.Controllers
     public interface IPlayerControllerInput
     {
         IObservable<float> Jump { get; }
-        IObservable<Vector2> Move { get; }
+        IObservable<float> Move { get; }
     }
     
     public class PlayerController : MonoBehaviour
@@ -28,9 +28,9 @@ namespace Towerfall.Controllers
             _rigidbody2D.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
 
-        private void Move(Vector2 value)
+        private void Move(float moveAcceleration)
         {
-            _rigidbody2D.AddForce(value, ForceMode2D.Force);
+            _rigidbody2D.AddForce(Vector2.right * moveAcceleration, ForceMode2D.Force);
         }
     }
 }

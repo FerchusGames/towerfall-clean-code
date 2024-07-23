@@ -14,16 +14,16 @@ namespace Towerfall.Managers
                 _jumpSubject.OnNext();
             }
             
-            _moveSubject.OnNext(new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")));
+            _moveSubject.OnNext(Input.GetAxisRaw("Horizontal"));
         }
     }
 
     public partial class InputManager : IPlayerInput
     {
         private readonly Subject<Unit> _jumpSubject = new Subject<Unit>();
-        private readonly Subject<Vector2> _moveSubject = new Subject<Vector2>(); // TODO: Change to float 
+        private readonly Subject<float> _moveSubject = new Subject<float>(); 
 
         public IObservable<Unit> Jump => _jumpSubject.AsObservable();
-        public IObservable<Vector2> Move => _moveSubject.AsObservable();
+        public IObservable<float> Move => _moveSubject.AsObservable();
     }
 }

@@ -13,19 +13,19 @@ namespace Towerfall.Managers
         [Inject] private IPlayerProperties _playerProperties;
 
         private Subject<float> _jumpSubject = new Subject<float>();
-        private Subject<Vector2> _moveSubject = new Subject<Vector2>();
+        private Subject<float> _moveSubject = new Subject<float>();
         
         public IObservable<float> Jump => _jumpSubject.AsObservable();
-        public IObservable<Vector2> Move => _moveSubject.AsObservable();
+        public IObservable<float> Move => _moveSubject.AsObservable();
         
         private void PassJumpEvent()
         {
             _jumpSubject.OnNext(_playerProperties.JumpForceMagnitude);
         }
 
-        private void PassMoveEvent(Vector2 moveDirection)
+        private void PassMoveEvent(float moveDirection)
         {
-            moveDirection.x *= _playerProperties.MoveAccelerationRate;
+            moveDirection *= _playerProperties.MoveAccelerationRate;
             _moveSubject.OnNext(moveDirection);
         }
     }
