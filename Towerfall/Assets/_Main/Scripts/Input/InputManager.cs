@@ -11,19 +11,36 @@ namespace Towerfall.Managers
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
-                _jumpSubject.OnNext();
+                _jumpStartSubject.OnNext();
             }
             
             _moveSubject.OnNext(Input.GetAxisRaw("Horizontal"));
+
+            if (Input.GetKeyDown(KeyCode.LeftShift))
+            {
+                _dashStartSubject.OnNext(new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized); 
+            }
         }
     }
 
     public partial class InputManager : IPlayerInput
     {
-        private readonly Subject<Unit> _jumpSubject = new Subject<Unit>();
-        private readonly Subject<float> _moveSubject = new Subject<float>(); 
+        private readonly Subject<Unit> _jumpStartSubject = new Subject<Unit>();
+        private readonly Subject<float> _moveSubject = new Subject<float>();
+        private readonly Subject<Vector2> _dashStartSubject = new Subject<Vector2>();
 
-        public IObservable<Unit> Jump => _jumpSubject.AsObservable();
+        public IObservable<Unit> JumpStart => _jumpStartSubject.AsObservable();
         public IObservable<float> Move => _moveSubject.AsObservable();
+        public IObservable<Vector2> DashStart => _dashStartSubject.AsObservable();
+    }
+
+    public partial class InputManager
+    {
+        int QuantizeAxis ( float input)
+        {
+            if (input < -0.5f) return -1;
+            if (input > 0.5f) return 1;
+            return 0;
+        }
     }
 }

@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d4743de84ceaaaf4ab703a1fef737455, type: 3}
   m_Name: PlayerProperties
   m_EditorClassIdentifier: 
-  <JumpForceMagnitude>k__BackingField: 6
   <MoveAccelerationRate>k__BackingField: 3
+  <JumpForceMagnitude>k__BackingField: 6
+  <DashForceMagnitude>k__BackingField: 20
+  <DashDuration>k__BackingField: 0.25
