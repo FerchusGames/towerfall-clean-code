@@ -22,7 +22,6 @@ namespace Towerfall.Managers
         public IObservable<float> JumpStart => _jumpStartSubject.AsObservable();
         public IObservable<float> Move => _moveSubject.AsObservable();
         public IObservable<Vector2> DashStart => _dashStartSubject.AsObservable();
-
         public IObservable<Unit> DashEnd => _dashEndSubject.AsObservable();
 
 
