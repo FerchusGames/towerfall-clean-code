@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IPlayerInput
 {
-    IObservable<Unit> JumpStart { get; }
-    IObservable<float> Move { get; }
-    IObservable<Vector2> DashStart { get; }
+    IObservable<Unit> JumpStartAction { get; }
+    IObservable<float> MoveAction { get; }
+    IObservable<Vector2> DashStartAction { get; }
 }

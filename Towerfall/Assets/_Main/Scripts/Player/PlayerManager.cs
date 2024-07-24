@@ -45,9 +45,9 @@ namespace Towerfall.Managers
     {
         public void Initialize() 
         {
-            _playerInput.JumpStart.Subscribe(PassJumpStartEvent);
-            _playerInput.Move.Subscribe(PassMoveEvent);
-            _playerInput.DashStart.Subscribe(PassDashStartEvent);
+            _playerInput.JumpStartAction.Subscribe(PassJumpStartEvent);
+            _playerInput.MoveAction.Subscribe(PassMoveEvent);
+            _playerInput.DashStartAction.Subscribe(PassDashStartEvent);
         }
     }
     

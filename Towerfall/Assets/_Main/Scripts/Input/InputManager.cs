@@ -29,9 +29,9 @@ namespace Towerfall.Managers
         private readonly Subject<float> _moveSubject = new Subject<float>();
         private readonly Subject<Vector2> _dashStartSubject = new Subject<Vector2>();
 
-        public IObservable<Unit> JumpStart => _jumpStartSubject.AsObservable();
-        public IObservable<float> Move => _moveSubject.AsObservable();
-        public IObservable<Vector2> DashStart => _dashStartSubject.AsObservable();
+        public IObservable<Unit> JumpStartAction => _jumpStartSubject.AsObservable();
+        public IObservable<float> MoveAction => _moveSubject.AsObservable();
+        public IObservable<Vector2> DashStartAction => _dashStartSubject.AsObservable();
     }
 
     public partial class InputManager
