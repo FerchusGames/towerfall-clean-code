@@ -25,17 +25,17 @@ namespace Towerfall.Managers
         public IObservable<Unit> DashEnd => _dashEndSubject.AsObservable();
 
 
-        private void PassJumpStartEvent()
+        private void ExecuteJumpStartEvent()
         {
             _jumpStartSubject.OnNext(_playerProperties.JumpForceMagnitude);
         }
 
-        private void PassMoveEvent(float moveDirection)
+        private void ExecuteMoveEvent(float moveDirection)
         {
             _moveSubject.OnNext(moveDirection * _playerProperties.MoveAccelerationRate);
         }
 
-        private void PassDashStartEvent(Vector2 dashDirection)
+        private void ExecuteDashStartEvent(Vector2 dashDirection)
         {
             Dash(dashDirection, _playerProperties.DashDuration).Forget();
         }
@@ -45,9 +45,9 @@ namespace Towerfall.Managers
     {
         public void Initialize() 
         {
-            _playerInput.JumpStartAction.Subscribe(PassJumpStartEvent);
-            _playerInput.MoveAction.Subscribe(PassMoveEvent);
-            _playerInput.DashStartAction.Subscribe(PassDashStartEvent);
+            _playerInput.JumpStartAction.Subscribe(ExecuteJumpStartEvent);
+            _playerInput.MoveAction.Subscribe(ExecuteMoveEvent);
+            _playerInput.DashStartAction.Subscribe(ExecuteDashStartEvent);
         }
     }
     
