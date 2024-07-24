@@ -55,8 +55,7 @@ namespace Towerfall.Managers
     {
         private async UniTaskVoid Dash(Vector2 dashDirection, float dashDuration)
         {
-            dashDirection *= _playerProperties.DashForceMagnitude;
-            _dashStartSubject.OnNext(dashDirection);
+            _dashStartSubject.OnNext(dashDirection * _playerProperties.DashForceMagnitude);
 
             await UniTask.Delay(TimeSpan.FromSeconds(dashDuration), ignoreTimeScale: false);
             
