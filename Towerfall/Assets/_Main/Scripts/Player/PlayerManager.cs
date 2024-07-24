@@ -32,8 +32,7 @@ namespace Towerfall.Managers
 
         private void PassMoveEvent(float moveDirection)
         {
-            moveDirection *= _playerProperties.MoveAccelerationRate;
-            _moveSubject.OnNext(moveDirection);
+            _moveSubject.OnNext(moveDirection * _playerProperties.MoveAccelerationRate);
         }
 
         private void PassDashStartEvent(Vector2 dashDirection)
