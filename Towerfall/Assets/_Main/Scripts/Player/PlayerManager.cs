@@ -14,13 +14,13 @@ namespace Towerfall.Managers
         [Inject] private IPlayerProperties _playerProperties;
 
         private Subject<float> _jumpStartSubject = new Subject<float>();
-        private Subject<float> _moveSubject = new Subject<float>();
+        private Subject<float> _runSubject = new Subject<float>();
         private Subject<Vector2> _dashStartSubject = new Subject<Vector2>();
 
         private Subject<Unit> _dashEndSubject = new Subject<Unit>();
         
         public IObservable<float> JumpStart => _jumpStartSubject.AsObservable();
-        public IObservable<float> Move => _moveSubject.AsObservable();
+        public IObservable<float> Run => _runSubject.AsObservable();
         public IObservable<Vector2> DashStart => _dashStartSubject.AsObservable();
         public IObservable<Unit> DashEnd => _dashEndSubject.AsObservable();
 
@@ -30,9 +30,9 @@ namespace Towerfall.Managers
             _jumpStartSubject.OnNext(_playerProperties.JumpForceMagnitude);
         }
 
-        private void ExecuteMoveEvent(float moveDirection)
+        private void ExecuteRunEvent(float runDirection)
         {
-            _moveSubject.OnNext(moveDirection * _playerProperties.MoveAccelerationRate);
+            _runSubject.OnNext(runDirection * _playerProperties.RunAccelerationRate);
         }
 
         private void ExecuteDashStartEvent(Vector2 dashDirection)
@@ -46,7 +46,7 @@ namespace Towerfall.Managers
         public void Initialize() 
         {
             _playerInput.JumpStartAction.Subscribe(ExecuteJumpStartEvent);
-            _playerInput.MoveAction.Subscribe(ExecuteMoveEvent);
+            _playerInput.RunAction.Subscribe(ExecuteRunEvent);
             _playerInput.DashStartAction.Subscribe(ExecuteDashStartEvent);
         }
     }
@@ -55,7 +55,7 @@ namespace Towerfall.Managers
     {
         private async UniTaskVoid Dash(Vector2 dashDirection)
         {
-            _dashStartSubject.OnNext(dashDirection * _playerProperties.DashForceMagnitude);
+            _dashStartSubject.OnNext(dashDirection * _playerProperties.DashSpeed);
 
             await UniTask.Delay(TimeSpan.FromSeconds(_playerProperties.DashDuration), ignoreTimeScale: false);
             

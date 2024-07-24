@@ -8,7 +8,7 @@ namespace Towerfall.Controllers
     public interface IPlayerControllerInput
     {
         IObservable<float> JumpStart { get; }
-        IObservable<float> Move { get; }
+        IObservable<float> Run { get; }
         IObservable<Vector2> DashStart { get; }
     }
 
@@ -27,7 +27,7 @@ namespace Towerfall.Controllers
         private void Start()
         {
             _playerControllerInput.JumpStart.Subscribe(JumpStart).AddTo(this);
-            _playerControllerInput.Move.Subscribe(Move).AddTo(this);
+            _playerControllerInput.Run.Subscribe(Run).AddTo(this);
             _playerControllerInput.DashStart.Subscribe(DashStart).AddTo(this);
 
             _playerControllerEvent.DashEnd.Subscribe(DashEnd).AddTo(this);
@@ -38,9 +38,9 @@ namespace Towerfall.Controllers
             _rigidbody2D.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
 
-        private void Move(float moveAcceleration)
+        private void Run(float runAcceleration)
         {
-            _rigidbody2D.AddForce(Vector2.right * moveAcceleration, ForceMode2D.Force);
+            _rigidbody2D.AddForce(Vector2.right * runAcceleration, ForceMode2D.Force);
         }
 
         private void DashStart(Vector2 dashForce)

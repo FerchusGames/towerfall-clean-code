@@ -14,7 +14,7 @@ namespace Towerfall.Managers
                 _jumpStartSubject.OnNext();
             }
             
-            _moveSubject.OnNext(Input.GetAxisRaw("Horizontal"));
+            _runSubject.OnNext(Input.GetAxisRaw("Horizontal"));
 
             if (Input.GetKeyDown(KeyCode.LeftShift))
             {
@@ -26,11 +26,11 @@ namespace Towerfall.Managers
     public partial class InputManager : IPlayerInput
     {
         private readonly Subject<Unit> _jumpStartSubject = new Subject<Unit>();
-        private readonly Subject<float> _moveSubject = new Subject<float>();
+        private readonly Subject<float> _runSubject = new Subject<float>();
         private readonly Subject<Vector2> _dashStartSubject = new Subject<Vector2>();
 
         public IObservable<Unit> JumpStartAction => _jumpStartSubject.AsObservable();
-        public IObservable<float> MoveAction => _moveSubject.AsObservable();
+        public IObservable<float> RunAction => _runSubject.AsObservable();
         public IObservable<Vector2> DashStartAction => _dashStartSubject.AsObservable();
     }
 
