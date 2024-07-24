@@ -37,7 +37,7 @@ namespace Towerfall.Managers
 
         private void ExecuteDashStartEvent(Vector2 dashDirection)
         {
-            Dash(dashDirection, _playerProperties.DashDuration).Forget();
+            Dash(dashDirection).Forget();
         }
     }
 
@@ -53,11 +53,11 @@ namespace Towerfall.Managers
     
     public partial class PlayerManager
     {
-        private async UniTaskVoid Dash(Vector2 dashDirection, float dashDuration)
+        private async UniTaskVoid Dash(Vector2 dashDirection)
         {
             _dashStartSubject.OnNext(dashDirection * _playerProperties.DashForceMagnitude);
 
-            await UniTask.Delay(TimeSpan.FromSeconds(dashDuration), ignoreTimeScale: false);
+            await UniTask.Delay(TimeSpan.FromSeconds(_playerProperties.DashDuration), ignoreTimeScale: false);
             
             _dashEndSubject.OnNext();
         }
