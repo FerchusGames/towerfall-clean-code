@@ -1,4 +1,5 @@
 using System;
+using Cysharp.Threading.Tasks;
 using Towerfall.Controllers;
 using Towerfall.Managers.Properties;
 using UniRx;
@@ -7,26 +8,36 @@ using Zenject;
 
 namespace Towerfall.Managers
 {
-    public partial class PlayerManager : IPlayerControllerInput
+    public partial class PlayerManager : IPlayerControllerInput, IPlayerControllerEvent
     {
         [Inject] private IPlayerInput _playerInput;
         [Inject] private IPlayerProperties _playerProperties;
 
-        private Subject<float> _jumpSubject = new Subject<float>();
-        private Subject<Vector2> _moveSubject = new Subject<Vector2>();
+        private Subject<float> _jumpStartSubject = new Subject<float>();
+        private Subject<float> _moveSubject = new Subject<float>();
+        private Subject<Vector2> _dashStartSubject = new Subject<Vector2>();
+
+        private Subject<Unit> _dashEndSubject = new Subject<Unit>();
         
-        public IObservable<float> Jump => _jumpSubject.AsObservable();
-        public IObservable<Vector2> Move => _moveSubject.AsObservable();
-        
-        private void PassJumpEvent()
+        public IObservable<float> JumpStart => _jumpStartSubject.AsObservable();
+        public IObservable<float> Move => _moveSubject.AsObservable();
+        public IObservable<Vector2> DashStart => _dashStartSubject.AsObservable();
+        public IObservable<Unit> DashEnd => _dashEndSubject.AsObservable();
+
+
+        private void ExecuteJumpStartEvent()
         {
-            _jumpSubject.OnNext(_playerProperties.JumpForceMagnitude);
+            _jumpStartSubject.OnNext(_playerProperties.JumpForceMagnitude);
         }
 
-        private void PassMoveEvent(Vector2 moveDirection)
+        private void ExecuteMoveEvent(float moveDirection)
         {
-            moveDirection.x *= _playerProperties.MoveAccelerationRate;
-            _moveSubject.OnNext(moveDirection);
+            _moveSubject.OnNext(moveDirection * _playerProperties.MoveAccelerationRate);
+        }
+
+        private void ExecuteDashStartEvent(Vector2 dashDirection)
+        {
+            Dash(dashDirection).Forget();
         }
     }
 
@@ -34,8 +45,21 @@ namespace Towerfall.Managers
     {
         public void Initialize() 
         {
-            _playerInput.Jump.Subscribe(PassJumpEvent);
-            _playerInput.Move.Subscribe(PassMoveEvent);
+            _playerInput.JumpStartAction.Subscribe(ExecuteJumpStartEvent);
+            _playerInput.MoveAction.Subscribe(ExecuteMoveEvent);
+            _playerInput.DashStartAction.Subscribe(ExecuteDashStartEvent);
+        }
+    }
+    
+    public partial class PlayerManager
+    {
+        private async UniTaskVoid Dash(Vector2 dashDirection)
+        {
+            _dashStartSubject.OnNext(dashDirection * _playerProperties.DashForceMagnitude);
+
+            await UniTask.Delay(TimeSpan.FromSeconds(_playerProperties.DashDuration), ignoreTimeScale: false);
+            
+            _dashEndSubject.OnNext();
         }
     }
 }
