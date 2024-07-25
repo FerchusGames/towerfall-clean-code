@@ -32,6 +32,8 @@ namespace Towerfall.Managers
 
         private void ExecuteRunEvent(float runDirection)
         {
+            
+            
             _runSubject.OnNext(runDirection * _playerProperties.RunAccelerationRate);
         }
 
