@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <RunMaxSpeed>k__BackingField: 10
   <RunAccelerationRate>k__BackingField: 5
-  <RunDecelerationRate>k__BackingField: 100
+  <RunDecelerationRate>k__BackingField: 10
   <AirAccelerationMultiplier>k__BackingField: 0.5
   <AirDecelerationMultiplier>k__BackingField: 0.75
   <JumpForceMagnitude>k__BackingField: 6

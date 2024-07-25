@@ -14,10 +14,17 @@ namespace Towerfall.Controllers
 
     public interface IPlayerControllerEvent
     {
+        void SetPlayerControllerData(IPlayerControllerData playerControllerData);
+
         IObservable<Unit> DashEnd { get; }
     }
+
+    public interface IPlayerControllerData
+    {
+        Vector2 RigidbodyVelocity { get; }
+    }
     
-    public class PlayerController : MonoBehaviour
+    public partial class PlayerController : MonoBehaviour
     {
         [Inject] private IPlayerControllerInput _playerControllerInput;
         [Inject] private IPlayerControllerEvent _playerControllerEvent;
@@ -26,11 +33,12 @@ namespace Towerfall.Controllers
         
         private void Start()
         {
+            _playerControllerEvent.SetPlayerControllerData(this);
+            _playerControllerEvent.DashEnd.Subscribe(DashEnd).AddTo(this);
+            
             _playerControllerInput.JumpStart.Subscribe(JumpStart).AddTo(this);
             _playerControllerInput.Run.Subscribe(Run).AddTo(this);
             _playerControllerInput.DashStart.Subscribe(DashStart).AddTo(this);
-
-            _playerControllerEvent.DashEnd.Subscribe(DashEnd).AddTo(this);
         }
 
         private void JumpStart(float jumpForce)
@@ -53,5 +61,10 @@ namespace Towerfall.Controllers
         {
             _rigidbody2D.velocity = Vector2.zero;
         }
+    }
+    
+    public partial class PlayerController : IPlayerControllerData
+    {
+        public Vector2 RigidbodyVelocity => _rigidbody2D.velocity;
     }
 }
