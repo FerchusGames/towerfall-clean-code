@@ -29,6 +29,15 @@ namespace Towerfall.Managers.Properties
         // Combat
         public float ArrowSpawnInterval { get; }
         public float AimThresholdTime { get; }
+        
+        // Gravity
+        public float GravityScale { get; }
+        public float MaxBaseFallSpeed { get; }
+        public float MaxFastFallSpeed { get; }
+        public float BaseFallGravityMultiplier { get; }
+        public float FastFallGravityMultiplier { get; }
+        public float JumpCutGravityMultiplier { get; }
+        public float JumpHangGravityMultiplier { get; }
     }
     
     [CreateAssetMenu(menuName = "Scriptable Objects/PlayerProperties", fileName = "PlayerProperties")]
@@ -58,5 +67,14 @@ namespace Towerfall.Managers.Properties
         [field:Header("Combat")]
         [field:SerializeField] public float ArrowSpawnInterval { get; private set; }
         [field:SerializeField] public float AimThresholdTime { get; private set; }
+        
+        [field:Header("Gravity")]
+        [field:SerializeField] public float GravityScale { get; private set; }
+        [field:SerializeField] public float MaxBaseFallSpeed { get; private set; }
+        [field:SerializeField] public float MaxFastFallSpeed { get; private set; }
+        [field:SerializeField] public float BaseFallGravityMultiplier { get; private set; }
+        [field:SerializeField] public float FastFallGravityMultiplier { get; private set; }
+        [field:SerializeField] public float JumpCutGravityMultiplier { get; private set; }
+        [field:SerializeField] public float JumpHangGravityMultiplier { get; private set; }
     }
 }
