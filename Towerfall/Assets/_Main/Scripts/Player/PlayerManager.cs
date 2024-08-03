@@ -43,8 +43,6 @@ namespace Towerfall.Managers
 
     public partial class PlayerManager : IPlayerControllerEvent
     {
-        [Inject] private IPlayerProperties _playerProperties;
-        
         private Subject<Unit> _dashEndSubject = new Subject<Unit>();
         
         public IObservable<Unit> DashEnd => _dashEndSubject.AsObservable();
@@ -70,6 +68,8 @@ namespace Towerfall.Managers
     
     public partial class PlayerManager
     {
+        [Inject] private IPlayerProperties _playerProperties;
+        
         private IPlayerControllerData _playerControllerData;
 
         private float LastOnGroundTime = 0;
