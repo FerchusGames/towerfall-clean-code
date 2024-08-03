@@ -2,7 +2,6 @@ using Towerfall.Databases;
 using Towerfall.Managers;
 using Towerfall.Managers.Properties;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Zenject;
 
 namespace Towerfall
