@@ -50,7 +50,12 @@ namespace Towerfall.Managers
 
     public partial class PlayerManager : IInitializable
     {
-        public void Initialize() 
+        public void Initialize()
+        {
+            SubscribeToObservables();
+        }
+
+        private void SubscribeToObservables()
         {
             _playerInput.JumpStartAction.Subscribe(ExecuteJumpStartEvent);
             _playerInput.RunAction.Subscribe(ExecuteRunEvent);
@@ -62,7 +67,7 @@ namespace Towerfall.Managers
     {
         public void Tick()
         {
-            LastOnGroundTime -= Time.deltaTime;
+            _lastOnGroundTime -= Time.deltaTime;
         }
     }
     
@@ -72,11 +77,13 @@ namespace Towerfall.Managers
         
         private IPlayerControllerData _playerControllerData;
 
-        private float LastOnGroundTime = 0;
+        private float _lastOnGroundTime = 0;
 
-        private bool IsJumping = false;
-        private bool IsJumpFalling = false;
-        
+        private bool _isJumping = false;
+        private bool _isJumpFalling = false;
+        private float _accelerationRate;
+        private float _targetSpeed;
+
         private async UniTaskVoid Dash(Vector2 dashDirection)
         {
             _dashStartSubject.OnNext(dashDirection * _playerProperties.Dash.Speed);
@@ -88,46 +95,81 @@ namespace Towerfall.Managers
 
         private float GetRunAcceleration(float runDirection)
         {
-            float targetSpeed = runDirection * _playerProperties.Movement.RunMaxSpeed;
+            _targetSpeed = runDirection * _playerProperties.Movement.RunMaxSpeed;
             
-            #region CALCULATING ACCELERATION RATE
+            UpdateAccelerationRate();
+            
+            return GetTargetAndCurrentSpeedDifference() * _accelerationRate;
+        }
 
-            float accelerationRate;
+        private float GetTargetAndCurrentSpeedDifference()
+        {
+            return _targetSpeed - _playerControllerData.RigidbodyVelocity.x;
+        }
 
-            // Our acceleration rate will differ depending on if we are trying to accelerate or if we are trying to stop completely.
-            // It will also change if we are in the air or if we are grounded.
+        private void UpdateAccelerationRate()
+        {
+            UpdateBaseAccelerationRate();
+            AddJumpHangMultipliers();
+        }
 
-            if (LastOnGroundTime > 0)
+        private void AddJumpHangMultipliers()
+        {
+            if (IsInJumpHang())
             {
-                accelerationRate = (Mathf.Abs(targetSpeed) > 0.01f) 
-                    ? _playerProperties.Movement.RunAccelerationRate 
-                    : _playerProperties.Movement.RunDecelerationRate;
+                _accelerationRate *= _playerProperties.Jump.HangAccelerationMultiplier;
+                _targetSpeed *= _playerProperties.Jump.HangMaxSpeedMultiplier;
+            }
+        }
+
+        private bool IsInJumpHang()
+        {
+            return (_isJumping || _isJumpFalling) && Mathf.Abs(_playerControllerData.RigidbodyVelocity.y) < _playerProperties.Jump.HangTimeThreshold;
+        }
+
+        private void UpdateBaseAccelerationRate()
+        {
+            if (IsOnGround())
+            {
+                _accelerationRate = GetGroundAccelerationRate();
             }
 
             else
             {
-                accelerationRate = (Mathf.Abs(targetSpeed) > 0.01f)
-                    ? _playerProperties.Movement.RunAccelerationRate * _playerProperties.Movement.AirAccelerationMultiplier
-                    : _playerProperties.Movement.RunDecelerationRate * _playerProperties.Movement.AirDecelerationMultiplier;
+                _accelerationRate = GetAirAccelerationRate();
             }
+        }
 
-            #endregion
-
-            #region ADD BONUS JUMP APEX ACCELERATION
-
-            if ((IsJumping || IsJumpFalling) && Mathf.Abs(_playerControllerData.RigidbodyVelocity.y) < _playerProperties.Jump.HangTimeThreshold)
+        private float GetAirAccelerationRate()
+        {
+            if (IsAccelerating())
             {
-                accelerationRate *= _playerProperties.Jump.HangAccelerationMultiplier;
-                targetSpeed *= _playerProperties.Jump.HangMaxSpeedMultiplier;
+                return _playerProperties.Movement.RunAccelerationRate 
+                       * _playerProperties.Movement.AirAccelerationMultiplier;
+            }
+            
+            return _playerProperties.Movement.RunDecelerationRate 
+                   * _playerProperties.Movement.AirDecelerationMultiplier;
+        }
+
+        private float GetGroundAccelerationRate()
+        {
+            if (IsAccelerating())
+            {
+                return _playerProperties.Movement.RunAccelerationRate;
             }
 
-            #endregion
+            return _playerProperties.Movement.RunDecelerationRate;
+        }
 
-            float speedDifference = targetSpeed - _playerControllerData.RigidbodyVelocity.x;
+        private bool IsAccelerating()
+        {
+            return Mathf.Abs(_targetSpeed) > 0.01f;
+        }
 
-            float acceleration = speedDifference * accelerationRate;
-
-            return acceleration;
+        private bool IsOnGround()
+        {
+            return _lastOnGroundTime > 0;
         }
     }
 }
