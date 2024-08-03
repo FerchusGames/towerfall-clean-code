@@ -20,6 +20,11 @@ namespace Towerfall.Managers
         public IObservable<float> Run => _runSubject.AsObservable();
         public IObservable<Vector2> DashStart => _dashStartSubject.AsObservable();
         
+        public void SetPlayerControllerData(IPlayerControllerData playerControllerData)
+        {
+            _playerControllerData = playerControllerData;
+        }
+        
         private void ExecuteJumpStartEvent()
         {
             _jumpStartSubject.OnNext(_playerProperties.JumpForceMagnitude);
@@ -43,11 +48,6 @@ namespace Towerfall.Managers
         private Subject<Unit> _dashEndSubject = new Subject<Unit>();
         
         public IObservable<Unit> DashEnd => _dashEndSubject.AsObservable();
-        
-        public void SetPlayerControllerData(IPlayerControllerData playerControllerData)
-        {
-            _playerControllerData = playerControllerData;
-        }
     }
 
     public partial class PlayerManager : IInitializable
