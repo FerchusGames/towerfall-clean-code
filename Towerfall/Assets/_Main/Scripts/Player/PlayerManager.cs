@@ -27,7 +27,7 @@ namespace Towerfall.Managers
         
         private void ExecuteJumpStartEvent()
         {
-            _jumpStartSubject.OnNext(_playerProperties.JumpForceMagnitude);
+            _jumpStartSubject.OnNext(_playerProperties.Jump.ForceMagnitude);
         }
 
         private void ExecuteRunEvent(float runDirection)
@@ -79,16 +79,16 @@ namespace Towerfall.Managers
         
         private async UniTaskVoid Dash(Vector2 dashDirection)
         {
-            _dashStartSubject.OnNext(dashDirection * _playerProperties.DashSpeed);
+            _dashStartSubject.OnNext(dashDirection * _playerProperties.Dash.Speed);
 
-            await UniTask.Delay(TimeSpan.FromSeconds(_playerProperties.DashDuration), ignoreTimeScale: false);
+            await UniTask.Delay(TimeSpan.FromSeconds(_playerProperties.Dash.Duration), ignoreTimeScale: false);
             
             _dashEndSubject.OnNext();
         }
 
         private float GetRunAcceleration(float runDirection)
         {
-            float targetSpeed = runDirection * _playerProperties.RunMaxSpeed;
+            float targetSpeed = runDirection * _playerProperties.Movement.RunMaxSpeed;
             
             #region CALCULATING ACCELERATION RATE
 
@@ -100,25 +100,25 @@ namespace Towerfall.Managers
             if (LastOnGroundTime > 0)
             {
                 accelerationRate = (Mathf.Abs(targetSpeed) > 0.01f) 
-                    ? _playerProperties.RunAccelerationRate 
-                    : _playerProperties.RunDecelerationRate;
+                    ? _playerProperties.Movement.RunAccelerationRate 
+                    : _playerProperties.Movement.RunDecelerationRate;
             }
 
             else
             {
                 accelerationRate = (Mathf.Abs(targetSpeed) > 0.01f)
-                    ? _playerProperties.RunAccelerationRate * _playerProperties.AirAccelerationMultiplier
-                    : _playerProperties.RunDecelerationRate * _playerProperties.AirDecelerationMultiplier;
+                    ? _playerProperties.Movement.RunAccelerationRate * _playerProperties.Movement.AirAccelerationMultiplier
+                    : _playerProperties.Movement.RunDecelerationRate * _playerProperties.Movement.AirDecelerationMultiplier;
             }
 
             #endregion
 
             #region ADD BONUS JUMP APEX ACCELERATION
 
-            if ((IsJumping || IsJumpFalling) && Mathf.Abs(_playerControllerData.RigidbodyVelocity.y) < _playerProperties.JumpHangTimeThreshold)
+            if ((IsJumping || IsJumpFalling) && Mathf.Abs(_playerControllerData.RigidbodyVelocity.y) < _playerProperties.Jump.HangTimeThreshold)
             {
-                accelerationRate *= _playerProperties.JumpHangAccelerationMultiplier;
-                targetSpeed *= _playerProperties.JumpHangMaxSpeedMultiplier;
+                accelerationRate *= _playerProperties.Jump.HangAccelerationMultiplier;
+                targetSpeed *= _playerProperties.Jump.HangMaxSpeedMultiplier;
             }
 
             #endregion
