@@ -13,18 +13,28 @@ namespace Towerfall
         
         public override void InstallBindings()
         {
-            //SCRIPTABLE OBJECTS
-            Container.BindInterfacesTo<PlayerProperties>().FromScriptableObject(_playerProperties).AsSingle();
-            
-            // DATABASES
-            Container.BindInterfacesTo<OptionsDatabase>().AsSingle();
-            Container.BindInterfacesTo<PlayerProgressionDatabase>().AsSingle();
-            Container.BindInterfacesTo<StatsDatabase>().AsSingle();
-            
-            //MANAGERS
+            InstallScriptableObjectBindings();
+            InstallDatabaseBindings();
+            InstallManagerBindings();
+        }
+
+        private void InstallManagerBindings()
+        {
             Container.BindInterfacesTo<PlayerManager>().AsSingle();
             Container.BindInterfacesTo<StageManager>().AsSingle();
             Container.BindInterfacesTo<InputManager>().AsSingle();
+        }
+
+        private void InstallDatabaseBindings()
+        {
+            Container.BindInterfacesTo<OptionsDatabase>().AsSingle();
+            Container.BindInterfacesTo<PlayerProgressionDatabase>().AsSingle();
+            Container.BindInterfacesTo<StatsDatabase>().AsSingle();
+        }
+
+        private void InstallScriptableObjectBindings()
+        {
+            Container.BindInterfacesTo<PlayerProperties>().FromScriptableObject(_playerProperties).AsSingle();
         }
     }
 }
