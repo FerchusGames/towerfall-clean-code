@@ -11,7 +11,7 @@ namespace Towerfall.Managers.Properties
         public PlayerGravityProperties Gravity { get; }
     }
     
-    [CreateAssetMenu(menuName = "ScriptableObjects/PlayerProperties", fileName = "PlayerProperties")]
+    [CreateAssetMenu(menuName = "ScriptableObjects/PlayerProperties/PlayerProperties", fileName = "PlayerProperties")]
     public class PlayerProperties : ScriptableObject, IPlayerProperties
     {
         [field:SerializeField] public PlayerMovementProperties Movement { get; private set; }

@@ -8,7 +8,7 @@ namespace Towerfall.Managers.Properties
         public float AimThresholdTime { get; }
     }
     
-    [CreateAssetMenu(menuName = "ScriptableObjects/PlayerProperties/Modules", fileName = "CombatProperties")]
+    [CreateAssetMenu(menuName = "ScriptableObjects/PlayerProperties/Modules/CombatProperties", fileName = "CombatProperties")]
     public class PlayerCombatProperties : ScriptableObject, IPlayerCombatProperties
     {
         [field:SerializeField] public float ArrowSpawnInterval { get; private set; }

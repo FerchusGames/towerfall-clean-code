@@ -12,7 +12,7 @@ namespace Towerfall.Managers.Properties
         public float HangMaxSpeedMultiplier { get; }
     }
 
-    [CreateAssetMenu(menuName = "ScriptableObjects/PlayerProperties/Modules", fileName = "JumpProperties")]
+    [CreateAssetMenu(menuName = "ScriptableObjects/PlayerProperties/Modules/JumpProperties", fileName = "JumpProperties")]
     public class PlayerJumpProperties : ScriptableObject, IPlayerJumpProperties
     {
         [field:SerializeField] public float ForceMagnitude { get; private set; }

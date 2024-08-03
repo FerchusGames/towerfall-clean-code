@@ -11,7 +11,7 @@ namespace Towerfall.Managers.Properties
         public float AirDecelerationMultiplier { get; }
     }
 
-    [CreateAssetMenu(menuName = "ScriptableObjects/PlayerProperties/Modules", fileName = "MovementProperties")]
+    [CreateAssetMenu(menuName = "ScriptableObjects/PlayerProperties/Modules/MovementProperties", fileName = "MovementProperties")]
     public class PlayerMovementProperties : ScriptableObject, IPlayerMovementProperties
     {
         [field: SerializeField] public float RunMaxSpeed { get; private set; }

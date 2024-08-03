@@ -13,7 +13,7 @@ namespace Towerfall.Managers.Properties
         public float JumpHangMultiplier { get; }
     }
     
-    [CreateAssetMenu(menuName = "ScriptableObjects/PlayerProperties/Modules", fileName = "GravityProperties")]
+    [CreateAssetMenu(menuName = "ScriptableObjects/PlayerProperties/Modules/GravityProperties", fileName = "GravityProperties")]
     public class PlayerGravityProperties : ScriptableObject, IPlayerGravityProperties
     {
         [field:SerializeField] public float Scale { get; private set; }

@@ -10,7 +10,7 @@ namespace Towerfall.Managers.Properties
         public float Cooldown { get; }
     }
     
-    [CreateAssetMenu(menuName = "ScriptableObjects/PlayerProperties/Modules", fileName = "DashProperties")]
+    [CreateAssetMenu(menuName = "ScriptableObjects/PlayerProperties/Modules/DashProperties", fileName = "DashProperties")]
     public class PlayerDashProperties : ScriptableObject, IPlayerDashProperties
     {
         [field:SerializeField] public float Speed { get; private set; }
