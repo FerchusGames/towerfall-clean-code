@@ -7,15 +7,15 @@ namespace Towerfall.Controllers
 {
     public interface IPlayerControllerInput
     {
-        void SetPlayerControllerData(IPlayerControllerData playerControllerData);
         IObservable<float> JumpStart { get; }
         IObservable<float> Run { get; }
         IObservable<Vector2> DashStart { get; }
+        IObservable<Unit> DashEnd { get; }
     }
 
     public interface IPlayerControllerEvent
     {
-        IObservable<Unit> DashEnd { get; }
+        void SetPlayerControllerData(IPlayerControllerData playerControllerData);
     }
 
     public interface IPlayerControllerData
@@ -37,7 +37,7 @@ namespace Towerfall.Controllers
         
         private void Start()
         {
-            _playerControllerInput.SetPlayerControllerData(this);
+            _playerControllerEvent.SetPlayerControllerData(this);
 
             SubscribeToObservables();
         }
@@ -47,8 +47,7 @@ namespace Towerfall.Controllers
             _playerControllerInput.JumpStart.Subscribe(JumpStart).AddTo(this);
             _playerControllerInput.Run.Subscribe(Run).AddTo(this);
             _playerControllerInput.DashStart.Subscribe(DashStart).AddTo(this);
-            
-            _playerControllerEvent.DashEnd.Subscribe(DashEnd).AddTo(this);
+            _playerControllerInput.DashEnd.Subscribe(DashEnd).AddTo(this);
         }
 
         private void JumpStart(float jumpForce)

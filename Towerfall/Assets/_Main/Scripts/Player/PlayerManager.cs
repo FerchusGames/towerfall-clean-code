@@ -15,15 +15,12 @@ namespace Towerfall.Managers
         private Subject<float> _jumpStartSubject = new Subject<float>();
         private Subject<float> _runSubject = new Subject<float>();
         private Subject<Vector2> _dashStartSubject = new Subject<Vector2>();
-        
+        private Subject<Unit> _dashEndSubject = new Subject<Unit>();
+
         public IObservable<float> JumpStart => _jumpStartSubject.AsObservable();
         public IObservable<float> Run => _runSubject.AsObservable();
         public IObservable<Vector2> DashStart => _dashStartSubject.AsObservable();
-        
-        public void SetPlayerControllerData(IPlayerControllerData playerControllerData)
-        {
-            _playerControllerData = playerControllerData;
-        }
+        public IObservable<Unit> DashEnd => _dashEndSubject.AsObservable();
         
         private void ExecuteJumpStartEvent()
         {
@@ -43,9 +40,12 @@ namespace Towerfall.Managers
 
     public partial class PlayerManager : IPlayerControllerEvent
     {
-        private Subject<Unit> _dashEndSubject = new Subject<Unit>();
+        private IPlayerControllerData _playerControllerData;
         
-        public IObservable<Unit> DashEnd => _dashEndSubject.AsObservable();
+        public void SetPlayerControllerData(IPlayerControllerData playerControllerData)
+        {
+            _playerControllerData = playerControllerData;
+        }
     }
 
     public partial class PlayerManager : IInitializable
@@ -75,8 +75,6 @@ namespace Towerfall.Managers
     {
         [Inject] private IPlayerProperties _playerProperties;
         
-        private IPlayerControllerData _playerControllerData;
-
         private float _lastOnGroundTime = 0;
 
         private bool _isJumping = false;
