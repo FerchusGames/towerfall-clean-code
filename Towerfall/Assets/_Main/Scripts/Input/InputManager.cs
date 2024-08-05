@@ -18,8 +18,13 @@ namespace Towerfall.Managers
 
             if (Input.GetKeyDown(KeyCode.LeftShift))
             {
-                _dashStartSubject.OnNext(new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized); 
+                _dashStartSubject.OnNext(GetNormalizedRawAxesVector2()); 
             }
+        }
+
+        private static Vector2 GetNormalizedRawAxesVector2()
+        {
+            return new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical")).normalized;
         }
     }
 

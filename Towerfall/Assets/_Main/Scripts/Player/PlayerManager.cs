@@ -122,7 +122,8 @@ namespace Towerfall.Managers
 
         private bool IsInJumpHang()
         {
-            return (_isJumping || _isJumpFalling) && Mathf.Abs(_playerControllerData.RigidbodyVelocity.y) < _playerProperties.Jump.HangTimeThreshold;
+            return (_isJumping || _isJumpFalling) 
+                   && Mathf.Abs(_playerControllerData.RigidbodyVelocity.y) < _playerProperties.Jump.HangTimeThreshold;
         }
 
         private void UpdateBaseAccelerationRate()
