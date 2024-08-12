@@ -8,16 +8,27 @@ namespace Towerfall.Controllers
     public interface IPlayerControllerInput
     {
         IObservable<float> JumpStart { get; }
-        IObservable<float> Move { get; }
+        IObservable<float> Run { get; }
         IObservable<Vector2> DashStart { get; }
+        IObservable<Unit> DashEnd { get; }
     }
 
     public interface IPlayerControllerEvent
     {
-        IObservable<Unit> DashEnd { get; }
+        void SetPlayerControllerData(IPlayerControllerData playerControllerData);
+    }
+
+    public interface IPlayerControllerData
+    {
+        Vector2 RigidbodyVelocity { get; }
     }
     
-    public class PlayerController : MonoBehaviour
+    public partial class PlayerController : IPlayerControllerData
+    {
+        public Vector2 RigidbodyVelocity => _rigidbody2D.velocity;
+    }
+    
+    public partial class PlayerController : MonoBehaviour
     {
         [Inject] private IPlayerControllerInput _playerControllerInput;
         [Inject] private IPlayerControllerEvent _playerControllerEvent;
@@ -26,11 +37,17 @@ namespace Towerfall.Controllers
         
         private void Start()
         {
-            _playerControllerInput.JumpStart.Subscribe(JumpStart).AddTo(this);
-            _playerControllerInput.Move.Subscribe(Move).AddTo(this);
-            _playerControllerInput.DashStart.Subscribe(DashStart).AddTo(this);
+            _playerControllerEvent.SetPlayerControllerData(this);
 
-            _playerControllerEvent.DashEnd.Subscribe(DashEnd).AddTo(this);
+            SubscribeToObservables();
+        }
+
+        private void SubscribeToObservables()
+        {
+            _playerControllerInput.JumpStart.Subscribe(JumpStart).AddTo(this);
+            _playerControllerInput.Run.Subscribe(Run).AddTo(this);
+            _playerControllerInput.DashStart.Subscribe(DashStart).AddTo(this);
+            _playerControllerInput.DashEnd.Subscribe(DashEnd).AddTo(this);
         }
 
         private void JumpStart(float jumpForce)
@@ -38,9 +55,9 @@ namespace Towerfall.Controllers
             _rigidbody2D.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
 
-        private void Move(float moveAcceleration)
+        private void Run(float runAcceleration)
         {
-            _rigidbody2D.AddForce(Vector2.right * moveAcceleration, ForceMode2D.Force);
+            _rigidbody2D.AddForce(Vector2.right * runAcceleration, ForceMode2D.Force);
         }
 
         private void DashStart(Vector2 dashForce)
